@@ -42,10 +42,22 @@ public class Rectangulo {
     public Coordenada getEsquina1() { return this.esquina1; }
     public Coordenada getEsquina2() { return this.esquina2; }
 
-    public double calculoArea() {
+    public double Area() {
         // como las esquinas ya estan ordenadas simplemente calculamos la base y la altura
         double base = esquina2.getX() - esquina1.getX();
         double altura = esquina2.getY() - esquina1.getY();
         return base * altura;
+    }
+
+    public double Perimetro() {
+        //igualmente calculamos la base y la altura y con eso el perimetro
+        double base = esquina2.getX() - esquina1.getX();
+        double altura = esquina2.getY() - esquina1.getY();
+        return 2 * (base + altura);
+    }
+
+    @Override
+    public String toString() {
+        return "Rectangulo [La esquina1 es: " + this.esquina1 + ", La esquina2 es: " + this.esquina2 + "]";
     }
 }
