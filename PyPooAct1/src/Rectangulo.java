@@ -58,6 +58,6 @@ public class Rectangulo {
 
     @Override
     public String toString() {
-        return "Rectangulo [La esquina1 es: " + this.esquina1 + ", La esquina2 es: " + this.esquina2 + "]";
+        return "Rectangulo [La esquina1 (inferior izq.) es: " + this.esquina1 + ", La esquina2 (superior der.) es: " + this.esquina2 + "]";
     }
 }
