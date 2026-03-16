@@ -1,6 +1,6 @@
 public class Verificador {
 
-    // verifica si se sobreponen
+    // verifica si dos rectangulos se sobreponen
     public static boolean SobrePuestos(Rectangulo r1, Rectangulo r2) {
 
         if (r1.getEsquina2().getX() <= r2.getEsquina1().getX())
@@ -41,6 +41,7 @@ public class Verificador {
 
     // no tienen contacto
     public static boolean Disjuntos(Rectangulo r1, Rectangulo r2) {
+
         return !SobrePuestos(r1, r2) && !Juntos(r1, r2);
     }
 }
