@@ -1,91 +1,45 @@
+
 public class Verificador {
 
-    //Para saber si estan sobrepuestos verificamos que no tengan una area compartida entre ambos
+    // Para saber si estan sobrepuestos verificamos que no tengan una area compartida entre ambos
     public static boolean SobrePuestos(Rectangulo r1, Rectangulo r2) {
-
-        //buscamos razones para darnos cuenta que no se tocan(que estan separados), asi si no se cumple ninguna
-        //significa que estan sobrepuestos
-
-        // ¿R1 está totalmente a la izquierda de R2?
-        double derechaR1 = r1.getEsquina2().getX();
-        double izquierdaR2 = r2.getEsquina1().getX();
-        if (derechaR1 <= izquierdaR2) {
+        // buscamos razones para darnos cuenta que NO se tocan.
+        // Si R1 está a la izquierda de R2 o a la derecha o abajo o arriba, entonces NO hay sobreposición.
+        if (r1.getEsquina2().getX() <= r2.getEsquina1().getX() ||
+                r1.getEsquina1().getX() >= r2.getEsquina2().getX() ||
+                r1.getEsquina2().getY() <= r2.getEsquina1().getY() ||
+                r1.getEsquina1().getY() >= r2.getEsquina2().getY()) {
             return false;
         }
 
-        // ¿R1 está totalmente a la derecha de R2?
-        double izquierdaR1 = r1.getEsquina1().getX();
-        double derechaR2 = r2.getEsquina2().getX();
-        if (izquierdaR1 >= derechaR2) {
-            return false;
-        }
-
-        // ¿R1 está totalmente abajo de R2?
-        double techoR1 = r1.getEsquina2().getY();
-        double sueloR2 = r2.getEsquina1().getY();
-        if (techoR1 <= sueloR2) {
-            return false;
-        }
-
-        // ¿R1 está totalmente arriba de R2?
-        double sueloR1 = r1.getEsquina1().getY();
-        double techoR2 = r2.getEsquina2().getY();
-        if (sueloR1 >= techoR2) {
-            return false;
-        }
-
-
-        //si no se cumple ninguno de los if, es xq no encontro ninguna formad e decir que estaban separados,
-        //entonces estan sobrepuestos
-
+        // si no se cumple ninguna de las condiciones de separacion, significa que comparten area,
+        // entonces estan sobrepuestos
         return true;
     }
 
     // juntos, pueden tocarse en los bordes pero no invaden al otro rectangulo
     public static boolean Juntos(Rectangulo r1, Rectangulo r2) {
-        // primero validamos si se sobre ponen
-        if (SobrePuestos(r1, r2) == true) {
+        // primero validamos si se sobre ponen, si ya invaden el area del otro no pueden estar solo juntos
+        if (SobrePuestos(r1, r2)) {
             return false;
         }
 
-        // verificamos contacto en X (si bordes verticales se tocan)
-        if (r1.getEsquina2().getX() == r2.getEsquina1().getX()) {
-            return true;
-        }
-        if (r1.getEsquina1().getX() == r2.getEsquina2().getX()) {
-            return true;
-        }
+        // Verificamos contacto en X pero validando que el rango en Y coincida (para que no esten uno lejos del otro)
+        boolean tocaX = (r1.getEsquina2().getX() == r2.getEsquina1().getX() || r1.getEsquina1().getX() == r2.getEsquina2().getX());
+        boolean rangoY = (r1.getEsquina1().getY() < r2.getEsquina2().getY() && r1.getEsquina2().getY() > r2.getEsquina1().getY());
 
-        // verificamos contacto en Y (si bordes horizontales se tocan)
-        if (r1.getEsquina2().getY() == r2.getEsquina1().getY()) {
-            return true;
-        }
-        if (r1.getEsquina1().getY() == r2.getEsquina2().getY()) {
-            return true;
-        }
+        // Verificamos contacto en Y pero validando que el rango en X coincida
+        boolean tocaY = (r1.getEsquina2().getY() == r2.getEsquina1().getY() || r1.getEsquina1().getY() == r2.getEsquina2().getY());
+        boolean rangoX = (r1.getEsquina1().getX() < r2.getEsquina2().getX() && r1.getEsquina2().getX() > r2.getEsquina1().getX());
 
-        // si no se cumple ningun if, significa que no se tocan en ningun punto
-        return false;
+        // si choca un borde y los rangos del otro eje se cruzan, estan realmente juntos
+        return (tocaX && rangoY) || (tocaY && rangoX);//retorna true si alguno de los 2 se cumple
     }
 
     // disjuntos, no se tocan, no tienen relacion
     public static boolean Disjuntos(Rectangulo r1, Rectangulo r2) {
-        boolean sobre = SobrePuestos(r1, r2);
-        boolean junto = Juntos(r1, r2);
-
-        //verifica si estan sobrepuestos o juntos, si ninguno es verdadero entonces son disjuntos
-        //pero si se tocan, no son disjuntos
-
-        if (sobre == false) {
-            if (junto == false) {
-                return true; // No están chocando ni tocándose
-            }
-        }
-        return false;
-    }
-}
-    // Caso 3: Son disjuntos
-    public static boolean esDisJunto(Rectangulo r1, Rectangulo r2) {
-        return !esSobrePos(r1, r2) && !esJunto(r1, r2);
+        // verifica si estan sobrepuestos o juntos
+        // si ninguno es verdadero, entonces son disjuntos
+        return !SobrePuestos(r1, r2) && !Juntos(r1, r2);//retorna true si no estan sobrepuestos ni juntos
     }
 }
