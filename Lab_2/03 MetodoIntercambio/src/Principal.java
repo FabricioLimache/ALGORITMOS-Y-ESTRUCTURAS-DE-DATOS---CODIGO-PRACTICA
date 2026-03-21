@@ -2,7 +2,7 @@ public class Principal {
     public static void main(String[] args) {
 
         // Probamos con string
-        String[] nombres = {"A", "B", "C", "D"};
+        String[] nombres = {"x", "y", "z", "w"};
         System.out.println("Arreglo original: ");
         MetodoIntercambio.imprimirArreglo(nombres);
 
@@ -14,7 +14,7 @@ public class Principal {
         System.out.println("\n----------------------------\n");
 
         // Probamos con Interger
-        Integer[] numeros = {10, 20, 30, 40};
+        Integer[] numeros = {23, 10, 2, 4};
         System.out.println("Arreglo original: ");
         MetodoIntercambio.imprimirArreglo(numeros);
 
@@ -23,4 +23,3 @@ public class Principal {
         System.out.println("Después del swap (0, 2) (intercambio): ");
         MetodoIntercambio.imprimirArreglo(numeros);
     }
-}
