@@ -29,5 +29,22 @@ public class TestGen {
         System.out.println("---Prueba exist() con Chocolatina---");
         System.out.println("¿Existe Ferrero en chocolatinas? "
                 + DemoMetodoGenerico.exist(chocolatinas, new Chocolatina("Ferrero"))); //true
+        
+     // Ejercicio 2: imprimirBolsa()
+        System.out.println("\n--- imprimirBolsa() con Chocolatinas ---");
+        Bolsa<Chocolatina> bolsaCho = new Bolsa<>(3);
+        bolsaCho.add(new Chocolatina("Milka"));
+        bolsaCho.add(new Chocolatina("Ferrero"));
+        bolsaCho.add(new Chocolatina("Hershey's"));
+        DemoMetodoGenerico.imprimirBolsa(bolsaCho);
+
+        System.out.println("\n--- imprimirBolsa() con Golosinas ---");
+        Bolsa<Golosina> bolsaGol = new Bolsa<>(3);
+        bolsaGol.add(new Golosina("Caramelo", 10));
+        bolsaGol.add(new Golosina("Chicle", 5));
+        bolsaGol.add(new Golosina("Gomita", 15));
+        DemoMetodoGenerico.imprimirBolsa(bolsaGol);
+        
+        
     }
 }

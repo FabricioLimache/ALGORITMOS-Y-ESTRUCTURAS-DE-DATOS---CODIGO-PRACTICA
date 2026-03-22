@@ -26,4 +26,13 @@ public class DemoMetodoGenerico {
         }
         return false;
     }
+    
+    //EJERCICIO 2: imprimirBolsa()
+    //Bolsa implementa Iterable<T>, entonces el for-each llama toString() de cada obj automáticamente */
+    public static <T> void imprimirBolsa(Bolsa<T> bolsa) {
+        for (T item : bolsa) {
+            System.out.println("- " + item);
+        }
+    }
+    
 }
