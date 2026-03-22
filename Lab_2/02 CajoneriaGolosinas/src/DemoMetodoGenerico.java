@@ -18,7 +18,7 @@ public class DemoMetodoGenerico {
         return true;
     }
 
-    // Ejercicio 1: exist()
+    // EJERCICIO 1: exist()
     public static <T> boolean exist(T[] arreglo, T elemento) {
         for (T item : arreglo) {
             if (item.equals(elemento))
