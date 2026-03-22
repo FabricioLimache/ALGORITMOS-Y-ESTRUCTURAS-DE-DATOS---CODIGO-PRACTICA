@@ -45,8 +45,8 @@ public class TestGen {
         bolsaGol.add(new Golosina("Gomita", 15));
         DemoMetodoGenerico.imprimirBolsa(bolsaGol);
         
-       //Ejercicio 5: (pruebas de lo que se hizo en ejercicios 3, 4 y 5)search, delete, toString
-        System.out.println("\n--- Ejercicio 4: Cajoneria con search, delete y toString ---");
+       //Ejercicio 5: pruebas de funcionamiento de lo que se hizo en ejercicios 3, 4 mediante search, delete, toString
+        System.out.println("\n--- Ejercicio 5: Cajoneria con search, delete y toString ---");
      
         Cajoneria<Golosina> cajoneria = new Cajoneria<>(5);
         
@@ -54,7 +54,7 @@ public class TestGen {
         cajoneria.add("Amarillo", new Golosina("Caramelo", 4));
         cajoneria.add("Azul",    new Golosina("Gomita", 10));
         cajoneria.add("Negro",     new Golosina("Gomita", 8));
-        cajoneria.add("Blanco",   new Golosina("Chocolate", 20));
+        cajoneria.add("Blanco",   new Golosina("Gomita", 8));
 
         //msotrar contenido con toString()
         System.out.println(cajoneria);
@@ -71,6 +71,12 @@ public class TestGen {
         System.out.println("\nCajoneria despues del delete:");
         System.out.println(cajoneria);
         
+        //ejercicio 6 prueba de funcionamiento de contar() con Golosina
+        System.out.println("--- Ejercicio 5 - prueba metodo contar con Golosina ---");
+        System.out.println("Cuantas veces aparece Gomita 5g?   " +
+            cajoneria.contar(new Golosina("Gomita", 8)));   
+        System.out.println("Cuantas veces aparece Caramelo 10g?  " +
+            cajoneria.contar(new Golosina("Gomita", 10)));
         
         
         

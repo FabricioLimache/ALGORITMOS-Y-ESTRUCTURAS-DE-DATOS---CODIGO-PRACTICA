@@ -59,6 +59,17 @@ public class Cajoneria<T> implements Iterable<Caja<T>> {
         }
         return sb.toString();
     }
+    
+    
+    public int contar(T elemento) {
+    	int count = 0;
+    	for(Caja<T> caja: cajas) {
+    		if(caja.getObjeto().equals(elemento))
+    			count++;
+    	}
+    	return count;
+    }
+    
 
     @Override
     public Iterator<Caja<T>> iterator() {
