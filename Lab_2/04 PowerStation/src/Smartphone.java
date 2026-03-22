@@ -2,20 +2,20 @@ package powerstation;
 
 import java.util.Objects;
 
-public class Laptop implements Cargable {
+public class Smartphone implements Cargable {
 
-    private String marca;
+    private String modelo;
     private double consumoVatios;
     private int nivelBateria;
 
-    public Laptop(String marca, double consumoVatios) {
-        this.marca         = marca;
+    public Smartphone(String modelo, double consumoVatios) {
+        this.modelo        = modelo;
         this.consumoVatios = consumoVatios;
         this.nivelBateria  = 0;
     }
 
-    public String getMarca() { return marca; }
-    public void setMarca(String marca) { this.marca = marca; }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
     public void setConsumoVatios(double consumoVatios) {
         this.consumoVatios = consumoVatios;
     }
@@ -29,27 +29,27 @@ public class Laptop implements Cargable {
     @Override
     public void cargar(int cantidad) {
         nivelBateria = Math.min(100, nivelBateria + cantidad);
-        System.out.println("[Laptop] " + marca
-                + " cargada. Batería actual: " + nivelBateria + "%");
+        System.out.println("[Smartphone] " + modelo
+                + " cargado. Batería actual: " + nivelBateria + "%");
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Laptop)) return false;
-        Laptop l = (Laptop) o;
-        return Double.compare(l.consumoVatios, consumoVatios) == 0
-                && Objects.equals(marca, l.marca);
+        if (!(o instanceof Smartphone)) return false;
+        Smartphone s = (Smartphone) o;
+        return Double.compare(s.consumoVatios, consumoVatios) == 0
+                && Objects.equals(modelo, s.modelo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(marca, consumoVatios);
+        return Objects.hash(modelo, consumoVatios);
     }
 
     @Override
     public String toString() {
-        return "Laptop{marca='" + marca
+        return "Smartphone{modelo='" + modelo
                 + "', consumo=" + consumoVatios + "W"
                 + ", batería=" + nivelBateria + "%}";
     }
