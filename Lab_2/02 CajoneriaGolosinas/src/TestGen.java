@@ -31,6 +31,7 @@ public class TestGen {
                 + DemoMetodoGenerico.exist(chocolatinas, new Chocolatina("Ferrero"))); //true
         
      // Ejercicio 2: imprimirBolsa()
+        System.out.println("\n--- Ejercicio 2: ---");
         System.out.println("\n--- imprimirBolsa() con Chocolatinas ---");
         Bolsa<Chocolatina> bolsaCho = new Bolsa<>(3);
         bolsaCho.add(new Chocolatina("Milka"));
@@ -72,12 +73,30 @@ public class TestGen {
         System.out.println(cajoneria);
         
         //ejercicio 6 prueba de funcionamiento de contar() con Golosina
-        System.out.println("--- Ejercicio 5 - prueba metodo contar con Golosina ---");
+        System.out.println("\n--- Ejercicio 6 - prueba metodo contar con Golosina ---");
         System.out.println("Cuantas veces aparece Gomita 5g?   " +
             cajoneria.contar(new Golosina("Gomita", 8)));   
         System.out.println("Cuantas veces aparece Caramelo 10g?  " +
             cajoneria.contar(new Golosina("Gomita", 10)));
         
+        //ejercicio 7, prueba de funcionameinto de contar() con Chocolatina
+        
+        Cajoneria<Chocolatina> cajoneriaChocolatina = new Cajoneria<>(6);
+        cajoneriaChocolatina.add("Blanco",     new Chocolatina("Milka"));
+        cajoneriaChocolatina.add("Rojo", new Chocolatina("Ferrero"));
+        cajoneriaChocolatina.add("Azul",    new Chocolatina("Milka"));
+        cajoneriaChocolatina.add("Verde",     new Chocolatina("Milka"));
+        cajoneriaChocolatina.add("Azul",   new Chocolatina("Sublime"));
+        cajoneriaChocolatina.add("Negro",    new Chocolatina("Ferrero"));
+        
+        System.out.println("\n--- Ejercicio 7 - prueba metodo contar con Chocolatina ---");
+        System.out.println(cajoneriaChocolatina);
+	    System.out.println("Cuantas veces aparece Milka?     " +
+	    		 cajoneriaChocolatina.contar(new Chocolatina("Milka")));     // 3
+	    System.out.println("Cuantas veces aparece Sublime?   " +
+	    		 cajoneriaChocolatina.contar(new Chocolatina("Sublime")));    // 1
+	    System.out.println("Cuantas veces aparece Donofrio?      " +
+	    		 cajoneriaChocolatina.contar(new Chocolatina("Donofrio"))); //0
         
         
     }
