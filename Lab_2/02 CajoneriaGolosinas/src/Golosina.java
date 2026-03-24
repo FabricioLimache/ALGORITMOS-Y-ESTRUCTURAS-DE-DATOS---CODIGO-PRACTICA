@@ -1,4 +1,4 @@
-public class Golosina {
+public class Golosina implements Comparable<Golosina>{
     private String nombre;
     private double peso;
 
@@ -14,18 +14,19 @@ public class Golosina {
     public double getPeso() { return peso; }
     public void setPeso(double peso) { this.peso = peso; }
 
-    /*
-     * equals sobreescrito para que exist() EJERCICIO 1 funcione correctamente
-        y java no compare referencias de memoria
-     * Dos golosinas son iguales si tienen el mismo nombre Y el mismo peso
+    /*conmpareTo sobreescrito para que exist() EJERCICIO 1 funcione correctamente
+     Dos golosinas son iguales si tienen el mismo nombre Y el mismo peso
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Golosina otra = (Golosina) obj;
-        return Double.compare(this.peso, otra.peso) == 0
-                && this.nombre.equals(otra.nombre);
+    public int compareTo(Golosina otra) {
+        // Primero comparar por nombre
+        int cmp = this.nombre.compareTo(otra.nombre);
+
+        // Si los nombres son iguales, comparar por peso
+        if (cmp == 0) {
+            return Double.compare(this.peso, otra.peso);
+        }
+        return cmp;
     }
  
     @Override

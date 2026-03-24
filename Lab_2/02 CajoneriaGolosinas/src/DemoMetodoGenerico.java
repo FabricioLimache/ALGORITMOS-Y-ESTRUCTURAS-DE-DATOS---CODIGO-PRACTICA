@@ -7,8 +7,7 @@ public class DemoMetodoGenerico {
             return false;
 
         for (int i = 0; i < x.length; i++) {
-            /*
-             * Usamos la función equals aquí para comparar el contenido real de los objetos
+            /*Usamos la función equals aquí para comparar el contenido real de los objetos
              * Si un elemento no coincide, devolvemos false de inmediato.
              */
             if (!x[i].equals(y[i]))
@@ -18,11 +17,12 @@ public class DemoMetodoGenerico {
         return true;
     }
 
-    // EJERCICIO 1: exist()
-    public static <T> boolean exist(T[] arreglo, T elemento) {
+    // Ejercicio 1: exist() usando comparable
+    public static <T extends Comparable<T>> boolean exist(T[] arreglo, T elemento) {
         for (T item : arreglo) {
-            if (item.equals(elemento))
+            if (item.compareTo(elemento) == 0) { // iguales
                 return true;
+            }
         }
         return false;
     }
@@ -34,5 +34,4 @@ public class DemoMetodoGenerico {
             System.out.println("- " + item);
         }
     }
-    
 }
