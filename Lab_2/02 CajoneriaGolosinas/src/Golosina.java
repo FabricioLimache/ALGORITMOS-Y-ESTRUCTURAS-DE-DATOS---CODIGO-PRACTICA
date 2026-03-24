@@ -28,6 +28,15 @@ public class Golosina implements Comparable<Golosina>{
         }
         return cmp;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Golosina otra = (Golosina) obj;
+        return Double.compare(this.peso, otra.peso) == 0
+                && this.nombre.equals(otra.nombre);
+    }
  
     @Override
     public String toString() {

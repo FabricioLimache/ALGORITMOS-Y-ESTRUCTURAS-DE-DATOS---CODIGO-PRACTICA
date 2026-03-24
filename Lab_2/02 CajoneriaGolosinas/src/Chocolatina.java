@@ -18,6 +18,16 @@ public class Chocolatina implements Comparable<Chocolatina>{
     	return this.marca.compareTo(otra.marca);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Chocolatina otra = (Chocolatina) obj;
+        return this.marca.equals(otra.marca);
+    }
+    
     
     @Override
     public String toString() {
