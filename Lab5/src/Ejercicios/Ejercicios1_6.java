@@ -18,6 +18,18 @@ public class Ejercicios1_6 {
 		return false;
 	}
 	
+	//EJERCICIO 2: BUSCAR ELEMENTO GENÉRICO EN UNA LISTA
+		public static <T> ListLinked<T> invertirLista(ListLinked<T> lista){
+			ListLinked<T> newList = new ListLinked<>();
+			Node<T> currentNode = lista.getFirst();
+			
+			while (currentNode != null) {
+				newList.insertFirst(currentNode.data);
+				currentNode = currentNode.next;
+			}
+			return newList;
+		}
+	
 	
 	
 	
@@ -47,6 +59,16 @@ public class Ejercicios1_6 {
             System.out.println("El elemento " + valor + " NO se encuentra en la lista");
         }
         
+      //prueba ejercicio 02
+        System.out.println("\n--------- EJERCICIO 02 ---------\ninvertirLista(): ");
+        System.out.println("Lista original:");
+        lista.printLinkedList(); // suponiendo que tienes un método printList()
+
+        // Invertimos la lista
+        ListLinked<Integer> listaInvertida = invertirLista(lista);
+
+        System.out.println("Lista invertida:");
+        listaInvertida.printLinkedList();
       
         
 	}
