@@ -58,6 +58,23 @@ public class Ejercicios1_6 {
 		return count;
 	}
 	
+	//EJERCICIO 5: COMPARAR DOS LISTAS
+	public static <T> boolean sonIguales(ListLinked<T> lista1, ListLinked<T> lista2) {
+		if (lista1 == null || lista2 == null) return false;
+
+		Node<T> a = lista1.getFirst();
+		Node<T> b = lista2.getFirst();
+		//listas vacias 
+		
+		while(a != null && b != null) {
+			if(!a.data.equals(b.data)) return false;
+			a = a.next;
+			b = b.next;
+		}
+		return a == null && b == null;
+	}
+	
+	
 	
 	public static void main(String[] args) {
 		//prueba ejercicio 01
@@ -106,7 +123,6 @@ public class Ejercicios1_6 {
         // Insertar al final 
         head = insertarAlFinal(head, 10);
         head = insertarAlFinal(head, 20);
-        head = insertarAlFinal(head, 30);
    
         // Actualizar el first de la lista;
         lista.setFirst(head);
@@ -122,6 +138,22 @@ public class Ejercicios1_6 {
         System.out.print("Cantidad de nodos de lista:");
         System.out.println(numNodos);
         
+        //prueba ejercicio 05
+        System.out.println("\n--------- EJERCICIO 05 ---------\nsonIguales(): ");
+        ListLinked<Integer> lista2 = new ListLinked<Integer>();
+		lista2.insertFirst(20);
+		lista2.insertFirst(10);
+		lista2.insertFirst(3);
+		lista2.insertFirst(4);
+		lista2.insertFirst(300);
+		lista2.insertFirst(40);
+
+        System.out.println("Lista 1: ");
+        lista.printLinkedList();
+        
+        System.out.println("Lista 2: ");
+        lista2.printLinkedList();
+        System.out.println("Resultado: " + sonIguales(lista, lista2));
 	}
 	
 }
