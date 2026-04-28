@@ -47,6 +47,16 @@ public class Ejercicios1_6 {
 		return head;
 	}
 		
+	//EJERCICIO 4: Contar NODOS
+	public static <T> int contarNodos(Node<T> head) {
+		Node<T> currentNode = head;
+		int count=0;
+		while(currentNode != null) {
+			count++;
+			currentNode = currentNode.next;
+		}
+		return count;
+	}
 	
 	
 	public static void main(String[] args) {
@@ -90,7 +100,7 @@ public class Ejercicios1_6 {
         System.out.println("\n--------- EJERCICIO 03 ---------\ninsertarAlFinal(): ");
         Node<Integer> head = lista.getFirst();
 
-        System.out.println("Contenido lista original:");
+        System.out.println("Contenido lista original: ");
         
 		lista.printLinkedList();
         // Insertar al final 
@@ -103,6 +113,14 @@ public class Ejercicios1_6 {
         
         System.out.println("Lista con inserciones al final:");
         lista.printLinkedList();
+        
+        
+        //prueba ejercicio 04
+        System.out.println("\n--------- EJERCICIO 04 ---------\ncontarNodos(): ");
+        
+        int numNodos = contarNodos(lista.getFirst());
+        System.out.print("Cantidad de nodos de lista:");
+        System.out.println(numNodos);
         
 	}
 	
