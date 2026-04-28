@@ -75,6 +75,28 @@ public class Ejercicios1_6 {
 	}
 	
 	
+	//EJERCICIO 6: CONCATENAR DOS LISTAS
+	public static <T> ListLinked<T> concatenarListas(ListLinked<T> lista1, ListLinked<T> lista2){
+	    ListLinked<T> res = new ListLinked<>();
+	    Node<T> head = res.getFirst();
+	    
+	    // Recorrer la primera lista
+	    for(Node<T> currentNode = lista1.getFirst(); currentNode != null; currentNode = currentNode.next) {
+	    	head = insertarAlFinal(head, currentNode.data);
+	    }
+
+	    // Recorrer la segunda lista
+	    for(Node<T> nodoActual = lista2.getFirst(); nodoActual != null; nodoActual = nodoActual.next) {
+	    	head = insertarAlFinal(head, nodoActual.data);
+	    }
+	    
+	    res.setFirst(head);
+	    return res;
+	}
+	
+
+
+	
 	
 	public static void main(String[] args) {
 		//prueba ejercicio 01
@@ -154,6 +176,24 @@ public class Ejercicios1_6 {
         System.out.println("Lista 2: ");
         lista2.printLinkedList();
         System.out.println("Resultado: " + sonIguales(lista, lista2));
+        
+        
+        //prueba ejercicio 06
+        System.out.println("\n--------- EJERCICIO 06 ---------\nconcatenarListas(): ");
+        ListLinked<Integer> lista3 = new ListLinked<Integer>();
+		lista3.insertFirst(90);
+		lista3.insertFirst(1);
+		lista3.insertFirst(3);
+        System.out.println("Lista 1: ");
+        lista.printLinkedList();
+        
+        System.out.println("Lista 3: ");
+        lista3.printLinkedList();
+        
+        System.out.println("Listas concatenadas: ");
+        ListLinked<Integer> res = concatenarListas(lista, lista3);
+        res.printLinkedList();
+        
 	}
 	
 }
