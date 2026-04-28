@@ -10,6 +10,9 @@ public class ListLinked<T> {
 	public Node<T> getFirst(){
 		return this.first;
 	}
+	public void setFirst(Node<T> first) {
+		this.first = first;
+	}
 	
 	//metodos iniciales basicas para pruebas del avance de ejercicios
 	public void printLinkedList() {

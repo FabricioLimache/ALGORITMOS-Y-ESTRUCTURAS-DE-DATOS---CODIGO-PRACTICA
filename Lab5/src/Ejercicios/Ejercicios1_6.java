@@ -18,19 +18,35 @@ public class Ejercicios1_6 {
 		return false;
 	}
 	
-	//EJERCICIO 2: BUSCAR ELEMENTO GENÉRICO EN UNA LISTA
-		public static <T> ListLinked<T> invertirLista(ListLinked<T> lista){
-			ListLinked<T> newList = new ListLinked<>();
-			Node<T> currentNode = lista.getFirst();
+	//EJERCICIO 2: INVERTIR UNA LISTA
+	public static <T> ListLinked<T> invertirLista(ListLinked<T> lista){
+		ListLinked<T> newList = new ListLinked<>();
+		Node<T> currentNode = lista.getFirst();
 			
-			while (currentNode != null) {
-				newList.insertFirst(currentNode.data);
-				currentNode = currentNode.next;
-			}
-			return newList;
+		while (currentNode != null) {
+			newList.insertFirst(currentNode.data);
+			currentNode = currentNode.next;
 		}
+		return newList;
+	}
 	
 	
+	//EJERCICIO 3: INSERTAR NODE AL FINAL
+	public static <T> Node<T> insertarAlFinal(Node<T> head, T valor){
+		Node<T> newNode = new Node<T>(valor);
+		if(head == null) {
+			//nuevo head si la lista esta vacia
+			return newNode;
+		}
+		Node<T> currentNode = head;
+		while(currentNode.next != null) {
+			currentNode = currentNode.next;
+		}
+		//enlazar nodo al final
+		currentNode.next = newNode;
+		return head;
+	}
+		
 	
 	
 	public static void main(String[] args) {
@@ -59,7 +75,7 @@ public class Ejercicios1_6 {
             System.out.println("El elemento " + valor + " NO se encuentra en la lista");
         }
         
-      //prueba ejercicio 02
+        //prueba ejercicio 02
         System.out.println("\n--------- EJERCICIO 02 ---------\ninvertirLista(): ");
         System.out.println("Lista original:");
         lista.printLinkedList(); // suponiendo que tienes un método printList()
@@ -69,7 +85,24 @@ public class Ejercicios1_6 {
 
         System.out.println("Lista invertida:");
         listaInvertida.printLinkedList();
-      
+        
+        //prueba ejercicio 03
+        System.out.println("\n--------- EJERCICIO 03 ---------\ninsertarAlFinal(): ");
+        Node<Integer> head = lista.getFirst();
+
+        System.out.println("Contenido lista original:");
+        
+		lista.printLinkedList();
+        // Insertar al final 
+        head = insertarAlFinal(head, 10);
+        head = insertarAlFinal(head, 20);
+        head = insertarAlFinal(head, 30);
+   
+        // Actualizar el first de la lista;
+        lista.setFirst(head);
+        
+        System.out.println("Lista con inserciones al final:");
+        lista.printLinkedList();
         
 	}
 	
