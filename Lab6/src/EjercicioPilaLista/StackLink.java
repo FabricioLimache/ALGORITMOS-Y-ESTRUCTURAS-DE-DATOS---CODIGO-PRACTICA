@@ -10,15 +10,16 @@ public class StackLink<E> implements Stack<E>{
 	@Override
 	public void push(E x) {
 		Node<E> newNode = new Node<E>(x);
-		newNode.setNext(top);
-		top = newNode;
+		newNode.setNext(top); // newNode apuntando a top
+		top = newNode;//newNode nuevo top
 		
 	}
 	@Override
 	public E pop() throws ExceptionIsEmpty {
+		//caso con pila vacia
 		if(isEmpty()) throw new ExceptionIsEmpty("Stack vacia");
 		
-		//guardar elemento a eliminar y mover apuntador
+		//guardar dato de nodo a eliminar y mover apuntador top al siguiente
 		E aux = top.getData();
 		top = top.getNext();
 		return aux;
@@ -33,7 +34,6 @@ public class StackLink<E> implements Stack<E>{
 	public boolean isEmpty() {
 		return top == null;
 	}
-	
 	
 	@Override
     public String toString() {
@@ -52,6 +52,4 @@ public class StackLink<E> implements Stack<E>{
         }
         return sb.toString();
     }
-	
-	
 }

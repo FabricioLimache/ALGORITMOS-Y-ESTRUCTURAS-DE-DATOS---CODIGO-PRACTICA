@@ -57,7 +57,6 @@ public class QueueArray<E> implements Queue<E> {
 		return size == array.length;
 	}
 	
-
 	
 	@Override
 	public String toString() {
