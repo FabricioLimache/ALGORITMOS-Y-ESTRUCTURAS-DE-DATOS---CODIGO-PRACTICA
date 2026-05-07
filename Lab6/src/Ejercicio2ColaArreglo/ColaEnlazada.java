@@ -1,7 +1,8 @@
 public class ColaEnlazada<T> {
     private Node<T> primero; // Frente de la cola
     private Node<T> ultimo;  // Final de la cola
-    private int capacidad = 5; // Límite de clientes solicitado
+    private int capacidad = 5; // Limite de clientes 
+
     private int tamaño = 0;
 
     public ColaEnlazada() {
@@ -12,7 +13,7 @@ public class ColaEnlazada<T> {
     // Inserta un cliente al final si hay espacio
     public boolean encolar(T x) {
         if (tamaño >= capacidad) {
-            System.out.println("Cola llena"); // Validación de capacidad máxima
+            System.out.println("Cola llena"); // valida capacidad maxima
             return false;
         }
         Node<T> nuevoNodo = new Node<>(x);
@@ -26,10 +27,10 @@ public class ColaEnlazada<T> {
         return true;
     }
 
-    // Retira al cliente del frente para su atención
+    // Retira al cliente del frente para su atencion
     public T desencolar() {
         if (estaVacia()) {
-            System.out.println("Cola vacía"); // Validación de estructura sin datos
+            System.out.println("Cola vacía"); //vaida q la cola no este vacia
             return null;
         }
         T valor = primero.value;
