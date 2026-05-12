@@ -245,3 +245,186 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     }
     
 }
+
+//==========================================
+// --- EJERCICIO 03 ---
+// ==========================================
+
+// a. Método iterativo para calcular el área (Hojas * Altura)
+public int areaBST() {
+    if (this.root == null) {
+        return 0;
+    }
+
+    int leafCount = 0;
+    int height = -1; 
+    
+    DequeLink<Node> queue = new DequeLink<>();
+    queue.addLast(this.root);
+
+    while (!queue.isEmpty()) {
+        int levelSize = queue.size(); 
+        height++; 
+
+        for (int i = 0; i < levelSize; i++) {
+            try {
+                Node current = queue.removeFirst(); 
+
+                if (current.left == null && current.right == null) {
+                    leafCount++;
+                }
+                
+                if (current.left != null) {
+                    queue.addLast(current.left);
+                }
+                if (current.right != null) {
+                    queue.addLast(current.right);
+                }
+            } catch (ExceptionIsEmpty e) {
+                System.out.println("Error interno: " + e.getMessage());
+            }
+        }
+    }
+    return leafCount * height;
+}
+
+// b. Dibujar el BST usando parenthesize()
+public void drawBST() {
+    System.out.println("Representacion visual del BST:");
+    parenthesize();
+}
+
+
+// ==========================================
+// --- EJERCICIO 04 ---
+// ==========================================
+
+// Representación entre paréntesis con sangría
+public void parenthesize() {
+    if (this.root == null) {
+        System.out.println("Arbol vacio");
+        return;
+    }
+    parenthesizeHelper(this.root, 0);
+}
+
+private void parenthesizeHelper(Node node, int level) {
+    if (node == null) return;
+
+    for (int i = 0; i < level; i++) {
+        System.out.print("  "); 
+    }
+
+    System.out.print(node.data);
+
+    if (node.left != null || node.right != null) {
+        System.out.println(" (");
+        parenthesizeHelper(node.left, level + 1);
+        parenthesizeHelper(node.right, level + 1);
+        
+        for (int i = 0; i < level; i++) {
+            System.out.print("  "); 
+        }
+        System.out.println(")");
+    } else {
+        System.out.println();
+    }
+}
+
+// Verificación de propiedades del BST
+public boolean isValidBST() {
+    DequeLink<Node> stack = new DequeLink<>();
+    Node current = this.root;
+    Node prev = null; 
+
+    while (current != null || !stack.isEmpty()) {
+        while (current != null) {
+            stack.addFirst(current); 
+            current = current.left;
+        }
+
+        try {
+            current = stack.removeFirst(); 
+
+            if (prev != null && ((Comparable<E>) current.data).compareTo(prev.data) <= 0) {
+                return false; 
+            }
+
+            prev = current;
+            current = current.right;
+
+        } catch (ExceptionIsEmpty e) {
+             System.out.println("Error interno en la pila: " + e.getMessage());
+             break;
+        }
+    }
+    return true; 
+}
+
+
+// ==========================================
+// --- EJERCICIO 05: Caso Aplicado Inventario ---
+// ==========================================
+
+// b. Búsqueda por rango
+public void searchRange(E min, E max) {
+    System.out.print("Productos en rango [" + min + " - " + max + "]: ");
+    searchRangeHelper(this.root, min, max);
+    System.out.println();
+}
+
+private void searchRangeHelper(Node node, E min, E max) {
+    if (node == null) return;
+
+    if (node.data.compareTo(min) > 0) {
+        searchRangeHelper(node.left, min, max);
+    }
+    
+    if (node.data.compareTo(min) >= 0 && node.data.compareTo(max) <= 0) {
+        System.out.print(node.data + " ");
+    }
+
+    if (node.data.compareTo(max) < 0) {
+        searchRangeHelper(node.right, min, max);
+    }
+}
+
+// c. Contar hojas (reutiliza logica, adaptado de iterativo)
+public int countLeaves() {
+    if (this.root == null) return 0;
+    
+    int leafCount = 0;
+    DequeLink<Node> queue = new DequeLink<>();
+    queue.addLast(this.root);
+
+    while (!queue.isEmpty()) {
+        try {
+            Node current = queue.removeFirst(); 
+            
+            if (current.left == null && current.right == null) {
+                leafCount++;
+            }
+            if (current.left != null) queue.addLast(current.left);
+            if (current.right != null) queue.addLast(current.right);
+            
+        } catch (ExceptionIsEmpty e) {
+            System.out.println("Error al contar hojas: " + e.getMessage());
+        }
+    }
+    return leafCount;
+}
+
+// d. Mostrar en orden descendente
+public void printDescending() {
+    System.out.print("Productos en orden descendente: ");
+    printDescendingHelper(this.root);
+    System.out.println();
+}
+
+private void printDescendingHelper(Node node) {
+    if (node == null) return;
+    
+    printDescendingHelper(node.right);  
+    System.out.print(node.data + " ");  
+    printDescendingHelper(node.left);   
+}
