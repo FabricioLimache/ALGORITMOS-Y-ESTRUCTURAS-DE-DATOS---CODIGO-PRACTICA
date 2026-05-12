@@ -115,5 +115,29 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     	}
     }
     
+    //actividad 10: Mínimo y máximo de un árbol
+    public E findMinNode() throws ExceptionIsEmpty, ItemNotFound {
+        if (isEmpty()) throw new ExceptionIsEmpty("El arbol esta vacio.");
+        
+        Node current = this.root;
+        //menor valor está en extremo izquierdo
+        while (current.left != null) {
+            current = current.left;
+        }
+
+        return search(current.data);
+    }
+
+    public E findMaxNode() throws ExceptionIsEmpty, ItemNotFound {
+        if (isEmpty()) throw new ExceptionIsEmpty("El arbol esta vacio.");
+        
+        Node current = this.root;
+        //el mayor valor está en el extremo derecho
+        while (current.right != null) {
+            current = current.right;
+        }
+        
+        return search(current.data);
+    }
     
 }
