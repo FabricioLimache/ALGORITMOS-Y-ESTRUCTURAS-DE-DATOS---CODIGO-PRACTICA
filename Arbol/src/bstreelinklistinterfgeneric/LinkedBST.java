@@ -244,4 +244,60 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return getWidth(node.left, level - 1) + getWidth(node.right, level - 1);
     }
     
+    
+    //EJERCICIO 3:areaBST() y drawBST()
+    public int areaBST() {
+        if (isEmpty()) return 0;
+
+        // obtener la altura de la raíz
+        int h = height(this.root.data);
+
+        // Contar hojas de forma iterativa (BFS)
+        int leafCount = 0;
+        DequeLink<Node> queue = new DequeLink<>();
+        queue.addLast(this.root);
+
+        try {
+            while (!queue.isEmpty()) {
+                Node temp = queue.removeFirst();
+                
+                //Si no tiene hijos, es una hoja
+                if (temp.left == null && temp.right == null) {
+                    leafCount++;
+                } else {
+                    //Si tiene hijos, se encolan para seguir explorando
+                    if (temp.left != null) queue.addLast(temp.left);
+                    if (temp.right != null) queue.addLast(temp.right);
+                }
+            }
+        } catch (ExceptionIsEmpty e) {
+            System.out.println(e.getMessage());
+        }
+
+        return leafCount * h;
+    }
+    
+    
+    public void drawBST() {
+        if (this.root == null) {
+            System.out.println("El arbol esta vacio.");
+        } else {
+            drawBST(this.root, "", true, "ROOT");
+        }
+    }
+
+    private void drawBST(Node node, String prefix, boolean isTail, String label) {
+        //Hijo derecho arriba
+        if (node.right != null) {
+            drawBST(node.right, prefix + (isTail ? "|   " : "    "), false, "D");
+        }
+        //root
+        String connector = label.equals("ROOT") ? "--- " : (isTail ? "\\-- " : "/-- ");
+        System.out.println(prefix + connector + "(" + label + ") " + node.data);
+
+        //Hijo izquierdo abajo
+        if (node.left != null) {
+            drawBST(node.left, prefix + (isTail ? "    " : "|   "), true, "I");
+        }
+    }
 }

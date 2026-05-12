@@ -57,6 +57,34 @@ public class TestBST {
             System.out.println("\n--- Destruyendo Nodos ---");
             arbol.destroyNodes();
             System.out.println(" arbol vacio?: " + arbol.isEmpty());
+            
+            
+            //PRUEBA EJERCICIO 3
+            LinkedBST<Integer> bst1 = new LinkedBST<>();
+            LinkedBST<Integer> bst2 = new LinkedBST<>();
+
+            // Insertar datos en bst1 y bst2...
+            bst1.insert(100);
+            bst1.insert(50);
+            bst1.insert(200);
+            bst1.insert(75);
+            
+            bst2.insert(100);
+            bst2.insert(200);
+            bst2.insert(300);
+            bst2.insert(400);
+            bst2.insert(500);
+            System.out.println("\nGrafico del arbol 1:");
+            bst1.drawBST();
+
+            System.out.println("Area arbol 1: " + bst1.areaBST());
+            System.out.println("Area arbol 2: " + bst2.areaBST());
+
+            if (sameArea(bst1, bst2)) {
+                System.out.println("Ambos arboles tienen la misma area.");
+            } else {
+                System.out.println("Los arboles tienen areas diferentes.");
+            }
            
 
         } catch (ItemDuplicated e) {
@@ -68,5 +96,10 @@ public class TestBST {
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
+    }
+    
+    public static boolean sameArea(LinkedBST<?> tree1, LinkedBST<?> tree2) {
+        //comparacion de resultados del método areaBST() de cada objeto
+        return tree1.areaBST() == tree2.areaBST();
     }
 }
