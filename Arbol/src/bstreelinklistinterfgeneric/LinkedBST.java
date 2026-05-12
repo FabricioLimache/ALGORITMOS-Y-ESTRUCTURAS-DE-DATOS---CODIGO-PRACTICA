@@ -1,5 +1,6 @@
 package bstreelinklistinterfgeneric;
 
+import Deque.DequeLink;
 import bstreeInterface.BinarySearchTree;
 import exceptions.*;
 
@@ -138,6 +139,109 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
         
         return search(current.data);
+    }
+    
+    //ejercicio 2: 
+    //a
+    public void destroyNodes() throws ExceptionIsEmpty {
+        if (isEmpty()) {
+            throw new ExceptionIsEmpty("El arbol ya esta vacio.");
+        }
+        this.root = null;
+        System.out.println("Todos los nodos han sido eliminados.");
+    }
+    
+    
+    //b: todos los nodos
+    public int countAllNodes() {
+        return countAllNodes(this.root);
+    }
+
+    //suma el nodo actual + hijos
+    private int countAllNodes(Node current) {
+        if (current == null) {
+            return 0;
+        }
+        // 1 (el nodo actual) + suma del subárbol izquierdo + subárbol derecho
+        return 1 + countAllNodes(current.left) + countAllNodes(current.right);
+    }
+    
+    //c: todos los nodos no-hojas
+    public int countNodes() {
+        return countNodes(this.root);
+    }
+
+    private int countNodes(Node current) {
+        //si el nodo es nulo o es una hoja --> 0
+        if (current == null || (current.left == null && current.right == null)) {
+            return 0;
+        }
+        // nodo no-hoja: contamos 1 + lo que haya en sus hijos
+        return 1 + countNodes(current.left) + countNodes(current.right);
+    }
+    
+    
+    
+    
+    //d: altura
+    public int height(E x) {
+        //Buscar nodo que contiene x 
+        Node current = this.root;
+        while (current != null && !current.data.equals(x)) {
+            if (x.compareTo(current.data) < 0) 
+                current = current.left;
+            else 
+                current = current.right;
+        }
+
+        // si x no existe en el arbol
+        if (current == null) return -1;
+
+        //Calcular altura del subárbol
+        DequeLink<Node> queue = new DequeLink<>();
+        queue.addLast(current);
+        int h = -1; //altura
+
+        try {
+            while (!queue.isEmpty()) {
+                int nodesAtLevel = queue.size(); //mediante método size()
+                h++; //por cada nivel que se procesa
+
+                for (int i = 0; i < nodesAtLevel; i++) {
+                    Node temp = queue.removeFirst();
+                    if (temp.left != null) queue.addLast(temp.left);
+                    if (temp.right != null) queue.addLast(temp.right);
+                }
+            }
+        } catch (ExceptionIsEmpty e) {
+          
+        }
+
+        return h;
+    }
+    
+    //e: amplitude(nivel)
+    public int amplitude() {
+        if (isEmpty()) return 0;
+
+        int maxNodes = 0;
+        int h = height(this.root.data); //altura total desde la raíz
+
+        //recorremos cada nivel y contamos sus nodos
+        for (int i = 0; i <= h; i++) {
+            int width = getWidth(this.root, i);
+            if (width > maxNodes) {
+                maxNodes = width;
+            }
+        }
+        return maxNodes;
+    }
+
+    // metodo auxiliar para contar nodos en un nivel específico
+    private int getWidth(Node node, int level) {
+        if (node == null) return 0;
+        if (level == 0) return 1;
+        return getWidth(node.left, level - 1) + getWidth(node.right, level - 1);
     }
     
 }
