@@ -96,6 +96,24 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     	}
     }
     
-
+    //actividad 9: recorrido post-order
+    
+    public void postOrder() throws ExceptionIsEmpty{
+    	if (isEmpty()) {
+            throw new ExceptionIsEmpty("El arbol está vacio");
+        }
+    	System.out.print("Recorrido Post-Order: ");
+    	postOrderRecursive(this.root);
+    	System.out.println();
+    	
+    }
+    private void postOrderRecursive(Node current) {
+    	if(current != null) {
+            postOrderRecursive(current.left);      //recorrer Subárbol Izquierdo
+            postOrderRecursive(current.right);     //recorrer Subárbol Derecho
+    		System.out.print(current.data + " "); //Raíz
+    	}
+    }
+    
     
 }
