@@ -77,4 +77,25 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
             inOrderRecursive(current.right);  // Derecha
         }
     }
+    
+    //actividad 8: recorrido pre-order
+    public void preOrder() throws ExceptionIsEmpty{
+    	if (isEmpty()) {
+            throw new ExceptionIsEmpty("El arbol está vacio");
+        }
+    	System.out.print("Recorrido Pre-Order: ");
+    	preOrderRecursive(this.root);
+    	System.out.println();
+    	
+    }
+    private void preOrderRecursive(Node current) {
+    	if(current != null) {
+    		System.out.print(current.data + " "); //Raíz (Cabecera)
+            preOrderRecursive(current.left);      //recorrer Subárbol Izquierdo
+            preOrderRecursive(current.right);     //recorrer Subárbol Derecho
+    	}
+    }
+    
+
+    
 }
