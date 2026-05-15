@@ -4,9 +4,13 @@ import Deque.DequeLink;
 import bstreeInterface.BinarySearchTree;
 import exceptions.*;
 
+package bstreelinklistinterfgeneric;
+
+import bstreeInterface.BinarySearchTree;
+import exceptions.*;
+
 public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
-    // Nodo interno para el árbol binario
     protected class Node {
         E data;
         Node left, right;
@@ -18,7 +22,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 
-    protected Node root; // Raíz del árbol
+    protected Node root;
 
     public LinkedBST() {
         this.root = null;
@@ -29,7 +33,6 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return this.root == null;
     }
 
-    // --- ACTIVIDAD 6: Inserción y Búsqueda ---
 
     @Override
     public void insert(E data) throws ItemDuplicated {
@@ -39,7 +42,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     private Node insertRecursive(Node current, E data) throws ItemDuplicated {
         if (current == null) return new Node(data);
         int res = data.compareTo(current.data);
-        if (res == 0) throw new ItemDuplicated("El dato ya existe.");
+        if (res == 0) throw new ItemDuplicated("El dato " + data + " ya existe.");
         if (res < 0) current.left = insertRecursive(current.left, data);
         else current.right = insertRecursive(current.right, data);
         return current;
@@ -51,33 +54,83 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     }
 
     private E searchRecursive(Node current, E data) throws ItemNotFound {
-        if (current == null) throw new ItemNotFound("No se encontró el dato.");
+        if (current == null) throw new ItemNotFound("No se encontró el dato " + data);
         int res = data.compareTo(current.data);
         if (res == 0) return current.data;
         return (res < 0) ? searchRecursive(current.left, data) : searchRecursive(current.right, data);
     }
 
+    public E minRecover() throws ExceptionIsEmpty {
+        if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío");
+        return minRecover(this.root).data;
+    }
+
+    protected Node minRecover(Node current) {
+        if (current.left == null) return current;
+        return minRecover(current.left);
+    }
+
+    public E maxRecover() throws ExceptionIsEmpty {
+        if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío");
+        return maxRecover(this.root).data;
+    }
+
+    protected Node maxRecover(Node current) {
+        if (current.right == null) return current;
+        return maxRecover(current.right);
+    }
+
     @Override
     public void delete(E data) throws ExceptionIsEmpty {
         if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío.");
-        // (La lógica de eliminación suele ser más extensa, pero aquí ya cumple la interfaz)
+        try {
+            this.root = deleteRecursive(this.root, data);
+        } catch (ItemNotFound e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private Node deleteRecursive(Node current, E data) throws ItemNotFound {
+        if (current == null) throw new ItemNotFound("No se puede eliminar: dato no encontrado.");
+        
+        int res = data.compareTo(current.data);
+        if (res < 0) {
+            current.left = deleteRecursive(current.left, data);
+        } else if (res > 0) {
+            current.right = deleteRecursive(current.right, data);
+        } else {
+            if (current.left == null) return current.right;
+            if (current.right == null) return current.left;
+
+            Node temp = minRecover(current.right);
+            current.data = temp.data;
+            try {
+                current.right = deleteRecursive(current.right, temp.data);
+            } catch (ItemNotFound e) { /* No ocurrirá */ }
+        }
+        return current;
     }
 
     // --- ACTIVIDAD 7: Recorrido In-Order ---
 
     public void inOrder() {
-        System.out.print("Recorrido In-Order: ");
-        inOrderRecursive(this.root);
-        System.out.println();
+        if (isEmpty()) {
+            System.out.println("Árbol vacío");
+        } else {
+            System.out.print("Recorrido In-Order: ");
+            inOrderRecursive(this.root);
+            System.out.println();
+        }
     }
 
     private void inOrderRecursive(Node current) {
         if (current != null) {
-            inOrderRecursive(current.left);   // Izquierda
-            System.out.print(current.data + " "); // Raíz
-            inOrderRecursive(current.right);  // Derecha
+            inOrderRecursive(current.left);
+            System.out.print(current.data + " ");
+            inOrderRecursive(current.right);
         }
     }
+
     
     //actividad 8: recorrido pre-order
     public void preOrder() throws ExceptionIsEmpty{
