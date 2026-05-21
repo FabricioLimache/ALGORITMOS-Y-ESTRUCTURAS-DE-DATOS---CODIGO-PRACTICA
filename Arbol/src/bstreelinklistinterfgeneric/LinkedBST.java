@@ -4,9 +4,11 @@ import Deque.DequeLink;
 import bstreeInterface.BinarySearchTree;
 import exceptions.*;
 
+import bstreeInterface.BinarySearchTree;
+import exceptions.*;
+
 public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
 
-    // Nodo interno para el árbol binario
     protected class Node {
         E data;
         Node left, right;
@@ -18,7 +20,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         }
     }
 
-    protected Node root; // Raíz del árbol
+    protected Node root;
 
     public LinkedBST() {
         this.root = null;
@@ -29,7 +31,6 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return this.root == null;
     }
 
-    // --- ACTIVIDAD 6: Inserción y Búsqueda ---
 
     @Override
     public void insert(E data) throws ItemDuplicated {
@@ -39,7 +40,7 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     private Node insertRecursive(Node current, E data) throws ItemDuplicated {
         if (current == null) return new Node(data);
         int res = data.compareTo(current.data);
-        if (res == 0) throw new ItemDuplicated("El dato ya existe.");
+        if (res == 0) throw new ItemDuplicated("El dato " + data + " ya existe.");
         if (res < 0) current.left = insertRecursive(current.left, data);
         else current.right = insertRecursive(current.right, data);
         return current;
@@ -51,33 +52,83 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
     }
 
     private E searchRecursive(Node current, E data) throws ItemNotFound {
-        if (current == null) throw new ItemNotFound("No se encontró el dato.");
+        if (current == null) throw new ItemNotFound("No se encontró el dato " + data);
         int res = data.compareTo(current.data);
         if (res == 0) return current.data;
         return (res < 0) ? searchRecursive(current.left, data) : searchRecursive(current.right, data);
     }
 
+    public E minRecover() throws ExceptionIsEmpty {
+        if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío");
+        return minRecover(this.root).data;
+    }
+
+    protected Node minRecover(Node current) {
+        if (current.left == null) return current;
+        return minRecover(current.left);
+    }
+
+    public E maxRecover() throws ExceptionIsEmpty {
+        if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío");
+        return maxRecover(this.root).data;
+    }
+
+    protected Node maxRecover(Node current) {
+        if (current.right == null) return current;
+        return maxRecover(current.right);
+    }
+
     @Override
     public void delete(E data) throws ExceptionIsEmpty {
         if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío.");
-        // (La lógica de eliminación suele ser más extensa, pero aquí ya cumple la interfaz)
+        try {
+            this.root = deleteRecursive(this.root, data);
+        } catch (ItemNotFound e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private Node deleteRecursive(Node current, E data) throws ItemNotFound {
+        if (current == null) throw new ItemNotFound("No se puede eliminar: dato no encontrado.");
+        
+        int res = data.compareTo(current.data);
+        if (res < 0) {
+            current.left = deleteRecursive(current.left, data);
+        } else if (res > 0) {
+            current.right = deleteRecursive(current.right, data);
+        } else {
+            if (current.left == null) return current.right;
+            if (current.right == null) return current.left;
+
+            Node temp = minRecover(current.right);
+            current.data = temp.data;
+            try {
+                current.right = deleteRecursive(current.right, temp.data);
+            } catch (ItemNotFound e) { /* No ocurrirá */ }
+        }
+        return current;
     }
 
     // --- ACTIVIDAD 7: Recorrido In-Order ---
 
     public void inOrder() {
-        System.out.print("Recorrido In-Order: ");
-        inOrderRecursive(this.root);
-        System.out.println();
+        if (isEmpty()) {
+            System.out.println("Árbol vacío");
+        } else {
+            System.out.print("Recorrido In-Order: ");
+            inOrderRecursive(this.root);
+            System.out.println();
+        }
     }
 
     private void inOrderRecursive(Node current) {
         if (current != null) {
-            inOrderRecursive(current.left);   // Izquierda
-            System.out.print(current.data + " "); // Raíz
-            inOrderRecursive(current.right);  // Derecha
+            inOrderRecursive(current.left);
+            System.out.print(current.data + " ");
+            inOrderRecursive(current.right);
         }
     }
+
     
     //actividad 8: recorrido pre-order
     public void preOrder() throws ExceptionIsEmpty{
@@ -244,60 +295,187 @@ public class LinkedBST<E extends Comparable<E>> implements BinarySearchTree<E> {
         return getWidth(node.left, level - 1) + getWidth(node.right, level - 1);
     }
     
-    
-    //EJERCICIO 3:areaBST() y drawBST()
-    public int areaBST() {
-        if (isEmpty()) return 0;
+  //==========================================
+ // --- EJERCICIO 03 ---
+ // ==========================================
 
-        // obtener la altura de la raíz
-        int h = height(this.root.data);
+ // a. Método iterativo para calcular el área (Hojas * Altura)
+ public int areaBST() {
+     if (this.root == null) {
+         return 0;
+     }
 
-        // Contar hojas de forma iterativa (BFS)
-        int leafCount = 0;
-        DequeLink<Node> queue = new DequeLink<>();
-        queue.addLast(this.root);
+     int leafCount = 0;
+     int height = -1; 
+     
+     DequeLink<Node> queue = new DequeLink<>();
+     queue.addLast(this.root);
 
-        try {
-            while (!queue.isEmpty()) {
-                Node temp = queue.removeFirst();
-                
-                //Si no tiene hijos, es una hoja
-                if (temp.left == null && temp.right == null) {
-                    leafCount++;
-                } else {
-                    //Si tiene hijos, se encolan para seguir explorando
-                    if (temp.left != null) queue.addLast(temp.left);
-                    if (temp.right != null) queue.addLast(temp.right);
-                }
-            }
-        } catch (ExceptionIsEmpty e) {
-            System.out.println(e.getMessage());
-        }
+     while (!queue.isEmpty()) {
+         int levelSize = queue.size(); 
+         height++; 
 
-        return leafCount * h;
-    }
-    
-    
-    public void drawBST() {
-        if (this.root == null) {
-            System.out.println("El arbol esta vacio.");
-        } else {
-            drawBST(this.root, "", true, "ROOT");
-        }
-    }
+         for (int i = 0; i < levelSize; i++) {
+             try {
+                 Node current = queue.removeFirst(); 
 
-    private void drawBST(Node node, String prefix, boolean isTail, String label) {
-        //Hijo derecho arriba
-        if (node.right != null) {
-            drawBST(node.right, prefix + (isTail ? "|   " : "    "), false, "D");
-        }
-        //root
-        String connector = label.equals("ROOT") ? "--- " : (isTail ? "\\-- " : "/-- ");
-        System.out.println(prefix + connector + "(" + label + ") " + node.data);
+                 if (current.left == null && current.right == null) {
+                     leafCount++;
+                 }
+                 
+                 if (current.left != null) {
+                     queue.addLast(current.left);
+                 }
+                 if (current.right != null) {
+                     queue.addLast(current.right);
+                 }
+             } catch (ExceptionIsEmpty e) {
+                 System.out.println("Error interno: " + e.getMessage());
+             }
+         }
+     }
+     return leafCount * height;
+ }
 
-        //Hijo izquierdo abajo
-        if (node.left != null) {
-            drawBST(node.left, prefix + (isTail ? "    " : "|   "), true, "I");
-        }
-    }
+ // b. Dibujar el BST usando parenthesize()
+ public void drawBST() {
+     System.out.println("Representacion visual del BST:");
+     parenthesize();
+ }
+
+
+ // ==========================================
+ // --- EJERCICIO 04 ---
+ // ==========================================
+
+ // Representación entre paréntesis con sangría
+ public void parenthesize() {
+     if (this.root == null) {
+         System.out.println("Arbol vacio");
+         return;
+     }
+     parenthesizeHelper(this.root, 0);
+ }
+
+ private void parenthesizeHelper(Node node, int level) {
+     if (node == null) return;
+
+     for (int i = 0; i < level; i++) {
+         System.out.print("  "); 
+     }
+
+     System.out.print(node.data);
+
+     if (node.left != null || node.right != null) {
+         System.out.println(" (");
+         parenthesizeHelper(node.left, level + 1);
+         parenthesizeHelper(node.right, level + 1);
+         
+         for (int i = 0; i < level; i++) {
+             System.out.print("  "); 
+         }
+         System.out.println(")");
+     } else {
+         System.out.println();
+     }
+ }
+
+ // Verificación de propiedades del BST
+ public boolean isValidBST() {
+     DequeLink<Node> stack = new DequeLink<>();
+     Node current = this.root;
+     Node prev = null; 
+
+     while (current != null || !stack.isEmpty()) {
+         while (current != null) {
+             stack.addFirst(current); 
+             current = current.left;
+         }
+
+         try {
+             current = stack.removeFirst(); 
+
+             if (prev != null && ((Comparable<E>) current.data).compareTo(prev.data) <= 0) {
+                 return false; 
+             }
+
+             prev = current;
+             current = current.right;
+
+         } catch (ExceptionIsEmpty e) {
+              System.out.println("Error interno en la pila: " + e.getMessage());
+              break;
+         }
+     }
+     return true; 
+ }
+
+
+ // ==========================================
+ // --- EJERCICIO 05: Caso Aplicado Inventario ---
+ // ==========================================
+
+ // b. Búsqueda por rango
+ public void searchRange(E min, E max) {
+     System.out.print("Productos en rango [" + min + " - " + max + "]: ");
+     searchRangeHelper(this.root, min, max);
+     System.out.println();
+ }
+
+ private void searchRangeHelper(Node node, E min, E max) {
+     if (node == null) return;
+
+     if (node.data.compareTo(min) > 0) {
+         searchRangeHelper(node.left, min, max);
+     }
+     
+     if (node.data.compareTo(min) >= 0 && node.data.compareTo(max) <= 0) {
+         System.out.print(node.data + " ");
+     }
+
+     if (node.data.compareTo(max) < 0) {
+         searchRangeHelper(node.right, min, max);
+     }
+ }
+
+ // c. Contar hojas (reutiliza logica, adaptado de iterativo)
+ public int countLeaves() {
+     if (this.root == null) return 0;
+     
+     int leafCount = 0;
+     DequeLink<Node> queue = new DequeLink<>();
+     queue.addLast(this.root);
+
+     while (!queue.isEmpty()) {
+         try {
+             Node current = queue.removeFirst(); 
+             
+             if (current.left == null && current.right == null) {
+                 leafCount++;
+             }
+             if (current.left != null) queue.addLast(current.left);
+             if (current.right != null) queue.addLast(current.right);
+             
+         } catch (ExceptionIsEmpty e) {
+             System.out.println("Error al contar hojas: " + e.getMessage());
+         }
+     }
+     return leafCount;
+ }
+
+ // d. Mostrar en orden descendente
+ public void printDescending() {
+     System.out.print("Productos en orden descendente: ");
+     printDescendingHelper(this.root);
+     System.out.println();
+ }
+
+ private void printDescendingHelper(Node node) {
+     if (node == null) return;
+     
+     printDescendingHelper(node.right);  
+     System.out.print(node.data + " ");  
+     printDescendingHelper(node.left);   
+ }
 }
+

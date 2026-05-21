@@ -1,14 +1,19 @@
+
 package bstreelinklistinterfgeneric;
 
 import exceptions.*;
 
 public class TestBST {
+    
+    // Método estático para el Ejercicio 03.c
+    public static <E extends Comparable<E>> boolean sameArea(LinkedBST<E> tree1, LinkedBST<E> tree2) {
+        return tree1.areaBST() == tree2.areaBST();
+    }
+
     public static void main(String[] args) {
         LinkedBST<Integer> arbol = new LinkedBST<>();
 
         try {
-         
-
             //----prueba act. 7-8-9 ------
             System.out.println("\n--- Insertando Nodos ---");
             int[] valores = {400, 100, 700, 50, 200, 75};
@@ -28,63 +33,49 @@ public class TestBST {
             System.out.println("Valor Minimo encontrado: " + arbol.findMinNode());
             System.out.println("Valor Maximo encontrado: " + arbol.findMaxNode());
             
-       
             //Ejercio 2
-            //Prueba conteo de nodos (ejercicio 02.b y 02.c)
             System.out.println("\n--- Estadisticas del Arbol ---");
             System.out.println("Total de nodos (countAllNodes): " + arbol.countAllNodes()); 
-            
             System.out.println("Nodos no-hojas (countNodes): " + arbol.countNodes()); 
-            //nodos con hijos: 400, 100, 50. Total: 3
-
-            //Prueba Altura  (ejercicio 02.d)
+            
             System.out.println("\n--- Prueba de Altura (Iterativa con Deque) ---");
             int valBusqueda = 100;
             System.out.println("Altura desde el nodo " + valBusqueda + ": " + arbol.height(valBusqueda));
-            //De 100 a 75 hay 2 saltos. Altura: 2
-            
-            System.out.println("Altura de un nodo inexistente (999): " + arbol.height(999)); // -1
-           
+            System.out.println("Altura de un nodo inexistente (999): " + arbol.height(999)); 
 
-            // Prueba Amplitud (ejercicio 02.e)
             System.out.println("\n--- Prueba de Amplitud ---");
             System.out.println("La amplitud maxima del arbol es: " + arbol.amplitude());
-            // Nivel 0: [400] (1)
-            // Nivel 1: [100, 700] (2)
-            // Nivel 2: [50, 200] (2) -> Amplitud máxima: 2
+
+            // ==========================================
+            // --- PRUEBAS DE TUS EJERCICIOS (3, 4 y 5) ---
+            // ==========================================
+
+            System.out.println("\n--- Ejercicio 03 y 04: Visualizacion y Area ---");
+            arbol.drawBST(); 
+            System.out.println("Area del arbol (Hojas * Altura): " + arbol.areaBST());
+
+            System.out.println("\nVerificacion de propiedad BST (isValidBST): " + arbol.isValidBST());
+
+            System.out.println("\nComparando area con otro arbol (sameArea):");
+            LinkedBST<Integer> arbol2 = new LinkedBST<>();
+            arbol2.insert(10); arbol2.insert(5); arbol2.insert(15);
+            System.out.println("¿arbol 1 tiene la misma area que arbol 2? : " + sameArea(arbol, arbol2));
+
+            System.out.println("\n--- Ejercicio 05: Caso Aplicado Inventario ---");
+            // a. Las inserciones ya se probaron arriba, el arbol de inventario será el mismo.
+            // b. Búsqueda por rango
+            arbol.searchRange(60, 250);
+            // c. Contar hojas
+            System.out.println("Numero de productos en hojas: " + arbol.countLeaves());
+            // d. Mostrar descendente
+            arbol.printDescending();
+            
+            // ==========================================
 
             // Prueba Eliminación Total (ejercicio 02.a)
             System.out.println("\n--- Destruyendo Nodos ---");
             arbol.destroyNodes();
             System.out.println(" arbol vacio?: " + arbol.isEmpty());
-            
-            
-            //PRUEBA EJERCICIO 3
-            LinkedBST<Integer> bst1 = new LinkedBST<>();
-            LinkedBST<Integer> bst2 = new LinkedBST<>();
-
-            // Insertar datos en bst1 y bst2...
-            bst1.insert(100);
-            bst1.insert(50);
-            bst1.insert(200);
-            bst1.insert(75);
-            
-            bst2.insert(100);
-            bst2.insert(200);
-            bst2.insert(300);
-            bst2.insert(400);
-            bst2.insert(500);
-            System.out.println("\nGrafico del arbol 1:");
-            bst1.drawBST();
-
-            System.out.println("Area arbol 1: " + bst1.areaBST());
-            System.out.println("Area arbol 2: " + bst2.areaBST());
-
-            if (sameArea(bst1, bst2)) {
-                System.out.println("Ambos arboles tienen la misma area.");
-            } else {
-                System.out.println("Los arboles tienen areas diferentes.");
-            }
            
 
         } catch (ItemDuplicated e) {
@@ -96,10 +87,5 @@ public class TestBST {
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
-    }
-    
-    public static boolean sameArea(LinkedBST<?> tree1, LinkedBST<?> tree2) {
-        //comparacion de resultados del método areaBST() de cada objeto
-        return tree1.areaBST() == tree2.areaBST();
     }
 }
