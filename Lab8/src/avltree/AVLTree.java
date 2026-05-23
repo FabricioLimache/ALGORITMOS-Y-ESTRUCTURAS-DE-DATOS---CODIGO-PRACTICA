@@ -26,15 +26,6 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         super();
         this.height = false; // inicialmente sin cambio de altura
     }
-
-
-    private NodeAVL leftChild(NodeAVL node) {
-        return (node == null) ? null : (NodeAVL) node.left;
-    }
-
-    private NodeAVL rightChild(NodeAVL node) {
-        return (node == null) ? null : (NodeAVL) node.right;
-    }
     
     //INSERCIÓN
     public void insert(E x) throws ItemDuplicated {
@@ -43,56 +34,34 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
     }
     
     protected Node insert(E x, NodeAVL node) throws ItemDuplicated {
-    	NodeAVL fat = node;
-    	
-    	if(node == null) {
-    		this.height = true;
-    		fat = new NodeAVL(x);
-    	}
-    	else {
-    		//control de duplicados
-    		int resC = node.data.compareTo(x);
-    		if(resC==0) throw new ItemDuplicated(x + "Ya se encuentra en el arbol...");
-    		
-    		if(resC < 0) {// rama derecha
-    			fat.right = insert(x, (NodeAVL) node.right);
-    			if(this.height)
-    				switch(fat.bf) {
-	    				case -1: 
-	    					fat.bf = 0;
-	    					this.height = false;
-	    					break;
-	    				case 0: 
-	    					fat.bf = 1;
-	    					this.height = true;
-	    					break;
-	    				case 1: //bf = 2
-	    					//resolver desbalance del arbol derecho
-	    					balanceToLeft(fat);
-	    					this.height = false;
-	    					break;
-	    			}
-    		}else { //Rama izquierda
-    			fat.left = insert(x, (NodeAVL)node.left);
-    			if(this.height)
-    				switch(fat.bf) {
-    				case 1: 
-    					fat.bf = 0;
-    					this.height = false;
-    					break;
-    				case 0:
-    					fat.bf = -1;
-    					this.height = true;
-    					break;
-    				case -1:
-    					//resolver desbalance del arbol izquierdo
-    					balanceToRight(fat);
-    					this.height = false;
-    					break;
-    				}
-    		}
-    	}
-    	return fat;
+        if (node == null) {
+            this.height = true;
+            return new NodeAVL(x); // Retornamos el nuevo nodo directamente
+        }
+        
+        int resC = node.data.compareTo(x);
+        if (resC == 0) throw new ItemDuplicated(x + " ya está en el árbol");
+        
+        if (resC < 0) { // Derecha
+            node.right = insert(x, (NodeAVL) node.right);
+            if (this.height) {
+                switch (node.bf) {
+                    case -1: node.bf = 0; this.height = false; break;
+                    case 0:  node.bf = 1; this.height = true; break;
+                    case 1:  node = balanceToLeft(node); this.height = false; break;
+                }
+            }
+        } else { // Izquierda
+            node.left = insert(x, (NodeAVL) node.left);
+            if (this.height) {
+                switch (node.bf) {
+                    case 1:  node.bf = 0; this.height = false; break;
+                    case 0:  node.bf = -1; this.height = true; break;
+                    case -1: node = balanceToRight(node); this.height = false; break;
+                }
+            }
+        }
+        return node; // Retornamos el nodo
     }
     
     // implementacion de metodos de balanceo
@@ -183,6 +152,60 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
         p.right = node;                  
         node = p;                        
         return node;
+    }
+    
+    //ELIMINACIÓN
+    public void remove(E x) {
+        this.height = false; 
+        this.root = remove(x, (NodeAVL) this.root);
+    }
+
+    protected Node remove(E x, NodeAVL node) {
+        if (node == null) return null;
+
+        int resC = node.data.compareTo(x);
+        NodeAVL fat = node;
+
+        if (resC > 0) { // Izquierda
+            fat.left = (NodeAVL) remove(x, (NodeAVL) node.left);
+            if (this.height) { // Si la altura de la izquierda cambió
+                switch (fat.bf) {
+                    case -1: fat.bf = 0; this.height = true; break;
+                    case 0:  fat.bf = 1; this.height = false; break;
+                    case 1:  fat = balanceToLeft(fat); this.height = true; break;
+                }
+            }
+        } else if (resC < 0) { // Derecha
+            fat.right = (NodeAVL) remove(x, (NodeAVL) node.right);
+            if (this.height) { // Si la altura de la derecha cambió
+                switch (fat.bf) {
+                    case 1:  fat.bf = 0; this.height = true; break;
+                    case 0:  fat.bf = -1; this.height = false; break;
+                    case -1: fat = balanceToRight(fat); this.height = true; break;
+                }
+            }
+        } else { // Nodo encontrado
+            if (node.left == null) { this.height = true; return (NodeAVL) node.right; }
+            if (node.right == null) { this.height = true; return (NodeAVL) node.left; }
+            
+            // Dos hijos: sucesor
+            NodeAVL successor = (NodeAVL) minRecover(node.right); // Usando método de BSTree
+            fat.data = successor.data;
+            
+            //Al borrar el sucesor, estamos modificando el lado derecho.
+            // Por lo tanto, debemos aplicar la misma lógica de balanceo que usamos para "Derecha"
+            fat.right = (NodeAVL) remove(successor.data, (NodeAVL) node.right);
+            
+            // REBALANCEO: Ahora aplicamos la lógica de reducción de altura por la DERECHA
+            if (this.height) {
+                switch (fat.bf) {
+                    case 1:  fat.bf = 0; this.height = true; break;
+                    case 0:  fat.bf = -1; this.height = false; break;
+                    case -1: fat = balanceToRight(fat); this.height = true; break;
+                }
+            }
+        }
+        return fat;
     }
 
     public void printTree() {
