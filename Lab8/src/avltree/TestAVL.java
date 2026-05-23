@@ -41,7 +41,17 @@ public class TestAVL {
             arbol.insert(10);
             arbol.printTree();
 
-        
+            // PRUEBA 7: Provocando Segunda RDL (Derecha-Izquierda)
+            // Insertamos 85 para forzar un nuevo desbalance RDL en el subárbol derecho
+            System.out.println("\n7. Insertando 85 -> Provocando segunda RDL...");
+            arbol.insert(85);
+            arbol.printTree();
+
+            // PRUEBA 8: Provocando Segunda RDR (Izquierda-Derecha)
+            // Insertamos 15 para forzar un nuevo desbalance RDR en el subárbol izquierdo
+            System.out.println("\n8. Insertando 15 -> Provocando segunda RDR...");
+            arbol.insert(15);
+            arbol.printTree();
 
         } catch (ItemDuplicated e) {
             System.out.println("Error en la prueba: " + e.getMessage());
