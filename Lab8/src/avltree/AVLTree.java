@@ -136,74 +136,100 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
     
     
     
-    // rotacion es simples
-    //RSL
+   //rotacion
+    private int getHeight(NodeAVL node) {
+        if (node == null) return 0;
+        int leftHeight = (node.left != null) ? getHeight((NodeAVL)node.left) : 0;
+        int rightHeight = (node.right != null) ? getHeight((NodeAVL)node.right) : 0;
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    private int updateHeightAndBF(NodeAVL node) {
+        if (node == null) return 0;
+        int hDer = (node.right != null) ? getHeight((NodeAVL)node.right) : 0;
+        int hIzq = (node.left != null) ? getHeight((NodeAVL)node.left) : 0;
+        node.bf = hDer - hIzq;
+        return 1 + Math.max(hIzq, hDer);
+    }
+
     private NodeAVL rotateSL(NodeAVL node) {
-    	NodeAVL p = (NodeAVL)node.right;
-    	node.right = p.left;
-    	p.left = node;
-    	node = p;
-    	return node;
+        NodeAVL p = (NodeAVL) node.right;
+        node.right = p.left;
+        p.left = node;
+        
+        updateHeightAndBF(node);
+        updateHeightAndBF(p);
+        return p;
     }
-    //RSR
+
     private NodeAVL rotateSR(NodeAVL node) {
-        NodeAVL p = (NodeAVL) node.left;  
-        node.left = p.right;             
-        p.right = node;                  
-        node = p;                        
-        return node;
+        NodeAVL p = (NodeAVL) node.left;
+        node.left = p.right;
+        p.right = node;
+        
+        updateHeightAndBF(node);
+        updateHeightAndBF(p);
+        return p;
     }
-    
-    //ELIMINACIÓN
-    public void remove(E x) {
-        this.height = false; 
+//eliminacion
+    @Override
+    public void delete(E x) throws ExceptionIsEmpty {
+        if (isEmpty()) throw new ExceptionIsEmpty("Árbol vacío.");
+        this.height = false;
         this.root = remove(x, (NodeAVL) this.root);
     }
 
     protected Node remove(E x, NodeAVL node) {
         if (node == null) return null;
-
         int resC = node.data.compareTo(x);
         NodeAVL fat = node;
 
-        if (resC > 0) { // Izquierda
+        if (resC > 0) { // Buscar por la Izquierda
             fat.left = (NodeAVL) remove(x, (NodeAVL) node.left);
-            if (this.height) { // Si la altura de la izquierda cambió
+            if (this.height) { 
+                updateHeightAndBF(fat);
                 switch (fat.bf) {
-                    case -1: fat.bf = 0; this.height = true; break;
-                    case 0:  fat.bf = 1; this.height = false; break;
-                    case 1:  fat = balanceToLeft(fat); this.height = true; break;
+                    case 0:  this.height = true; break;
+                    case 1:  this.height = false; break;
+                    case 2:  fat = balanceToLeft(fat); this.height = true; break;
                 }
             }
-        } else if (resC < 0) { // Derecha
+        } else if (resC < 0) { // Buscar por la Derecha
             fat.right = (NodeAVL) remove(x, (NodeAVL) node.right);
-            if (this.height) { // Si la altura de la derecha cambió
+            if (this.height) { 
+                updateHeightAndBF(fat);
                 switch (fat.bf) {
-                    case 1:  fat.bf = 0; this.height = true; break;
-                    case 0:  fat.bf = -1; this.height = false; break;
-                    case -1: fat = balanceToRight(fat); this.height = true; break;
+                    case 0:   this.height = true; break;
+                    case -1:  this.height = false; break;
+                    case -2:  fat = balanceToRight(fat); this.height = true; break;
                 }
             }
-        } else { // Nodo encontrado
-            if (node.left == null) { this.height = true; return (NodeAVL) node.right; }
-            if (node.right == null) { this.height = true; return (NodeAVL) node.left; }
-            
-            // Dos hijos: sucesor
-            NodeAVL successor = (NodeAVL) minRecover(node.right); // Usando método de BSTree
-            fat.data = successor.data;
-            
-            //Al borrar el sucesor, estamos modificando el lado derecho.
-            // Por lo tanto, debemos aplicar la misma lógica de balanceo que usamos para "Derecha"
-            fat.right = (NodeAVL) remove(successor.data, (NodeAVL) node.right);
-            
-            // REBALANCEO: Ahora aplicamos la lógica de reducción de altura por la DERECHA
-            if (this.height) {
-                switch (fat.bf) {
-                    case 1:  fat.bf = 0; this.height = true; break;
-                    case 0:  fat.bf = -1; this.height = false; break;
-                    case -1: fat = balanceToRight(fat); this.height = true; break;
+        } else { // Nodo Encontrado
+            if (node.left == null || node.right == null) {
+                NodeAVL temp = (node.left != null) ? (NodeAVL) node.left : (NodeAVL) node.right;
+                this.height = true;
+                if (temp == null) {
+                    return null; // Caso 1: Hoja
+                } else {
+                    return temp; // Caso 2: Un solo hijo
+                }
+            } else { 
+                // Caso 3: Dos hijos (Buscamos Sucesor Inorden)
+                NodeAVL successor = (NodeAVL) minRecover(node.right);
+                fat.data = successor.data;
+                fat.right = (NodeAVL) remove(successor.data, (NodeAVL) node.right);
+                if (this.height) {
+                    updateHeightAndBF(fat);
+                    switch (fat.bf) {
+                        case 0:   this.height = true; break;
+                        case -1:  this.height = false; break;
+                        case -2:  fat = balanceToRight(fat); this.height = true; break;
+                    }
                 }
             }
+        }
+        if (fat != null) {
+            updateHeightAndBF(fat);
         }
         return fat;
     }
@@ -228,6 +254,38 @@ public class AVLTree<E extends Comparable<E>> extends BSTree<E> {
                 printTree((NodeAVL) node.left, prefix + (isLeft ? "|   " : "    "), true);
                 printTree((NodeAVL) node.right, prefix + (isLeft ? "|   " : "    "), false);
             }
+        }
+    }
+   //recorrido amplitudd
+    public void breadthFirstSearch() {
+        int maxLevel = getHeight((NodeAVL) this.root);
+        for (int i = 1; i <= maxLevel; i++) {
+            printGivenLevel((NodeAVL) this.root, i);
+        }
+        System.out.println();
+    }
+    // recorrer niveles
+    private void printGivenLevel(NodeAVL node, int level) {
+        if (node == null) return;
+        if (level == 1) {
+            System.out.print(node.data + " ");
+        } else if (level > 1) {
+            printGivenLevel((NodeAVL) node.left, level - 1);
+            printGivenLevel((NodeAVL) node.right, level - 1);
+        }
+    }
+    // recorrido en preorden
+    public void preOrder() {
+        System.out.print("Recorrido Pre-Order AVL: ");
+        preOrderRecursive((NodeAVL) this.root);
+        System.out.println();
+    }
+
+    private void preOrderRecursive(NodeAVL current) {
+        if (current != null) {
+            System.out.print(current.data + " ");
+            preOrderRecursive((NodeAVL) current.left);
+            preOrderRecursive((NodeAVL) current.right);
         }
     }
     
