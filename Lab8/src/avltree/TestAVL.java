@@ -1,5 +1,7 @@
 package avltree;
+
 import exceptions.ItemDuplicated;
+import exceptions.ExceptionIsEmpty;
 
 public class TestAVL {
 
@@ -53,8 +55,43 @@ public class TestAVL {
             arbol.insert(15);
             arbol.printTree();
 
+
+            // prueba ejercicio 2
+            bstree.BSTree<Integer> arbolBST = new bstree.BSTree<>();
+            int[] secuenciaOrdenada = {10, 20, 30, 40, 50};
+            
+            for (int valor : secuenciaOrdenada) {
+                arbolBST.insert(valor);
+            }
+            
+            System.out.println("\n--- COMPARACIÓN DE ESTRUCTURAS ---");
+            System.out.print("Recorrido In-Order BST: ");
+            arbolBST.inOrder();
+
+
+            // prueba ejercicio 7
+            System.out.println("\n--- TRAZAS DE RECORRIDOS AVL ---");
+            arbol.inOrder(); 
+            arbol.preOrder(); 
+            System.out.print("Recorrido por Amplitud:  ");
+            arbol.breadthFirstSearch(); 
+
+            System.out.println("\nEliminando nodo hoja (10)...");
+            arbol.delete(10);
+            arbol.printTree();
+
+            System.out.println("\nEliminando nodo con un hijo (60)...");
+            arbol.delete(60);
+            arbol.printTree();
+
+            System.out.println("\nEliminando nodo raíz principal (50)...");
+            arbol.delete(50);
+            arbol.printTree();
+
         } catch (ItemDuplicated e) {
             System.out.println("Error en la prueba: " + e.getMessage());
+        } catch (ExceptionIsEmpty e) {
+            System.out.println("Error de estructura vacía: " + e.getMessage());
         }
 
 	}
